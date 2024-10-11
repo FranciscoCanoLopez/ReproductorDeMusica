@@ -9,7 +9,7 @@ namespace ReproductorDeMusica
     {
         private WindowsMediaPlayer player;
         private DoubleLinkedList songList;
-
+        private bool isUpdatingComboBox = false; // Bandera para evitar el bucle
         public Form1()
         {
             InitializeComponent();
@@ -18,21 +18,26 @@ namespace ReproductorDeMusica
             lstvSongs.View = View.List;
         }
 
-        private void btnLoadSongs_Click(object sender, EventArgs e)
+private void btnLoadSongs_Click(object sender, EventArgs e)
+{
+    using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+    {
+        if (folderDialog.ShowDialog() == DialogResult.OK)
         {
-            using FolderBrowserDialog folderDialog = new FolderBrowserDialog();
-            if (folderDialog.ShowDialog() == DialogResult.OK)
+            songList.Clear();
+            lstvSongs.Items.Clear();
+
+            string[] archivos = Directory.GetFiles(folderDialog.SelectedPath, "*.mp3");
+            foreach (string archivo in archivos)
             {
-                string[] archivos = Directory.GetFiles(folderDialog.SelectedPath, "*.mp3");
-                foreach (string archivo in archivos)
-                {
-                    string nombre = Path.GetFileName(archivo);
-                    songList.AggNode(nombre, archivo);
-                    lstvSongs.Items.Add(nombre);
-                }
-                songList.Inicializar();
+                string nombre = Path.GetFileName(archivo);
+                songList.AggNode(nombre, archivo);
+                lstvSongs.Items.Add(nombre);
             }
+            songList.Inicializar();
         }
+    }
+}
 
         private bool isPlaying = false;
         private bool isPaused = false;

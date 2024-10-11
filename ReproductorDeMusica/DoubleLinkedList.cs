@@ -8,23 +8,21 @@ namespace ReproductorDeMusica
 {
     internal class DoubleLinkedList
     {
-        public Node First { get; set; }
+        public Node Head { get; set; }
         public Node Last { get; set; }
         public Node Current { get; set; }
-
         public DoubleLinkedList()
         {
-            First = null!;
+            Head = null!;
             Last = null!; 
             Current = null!;
         }
-
         public void AggNode(string name, string rute)
         {
             Node New = new(name, rute);
-            if (First == null)
+            if (Head == null)
             {
-                First = New;
+                Head = New;
                 Last = New;
             }
             else
@@ -34,7 +32,19 @@ namespace ReproductorDeMusica
                 Last = New;
             }
         }
-
+        public bool Search(string name)
+        {
+            Node? current = Head;
+            while (current != null)
+            {
+                if (current.Name == name)
+                {
+                    return true;
+                }
+                current = current.Next;
+            }
+            return false;
+        }
         public void MoveNext()
         {
             if (Current != null && Current.Next != null)
@@ -42,7 +52,6 @@ namespace ReproductorDeMusica
                 Current = Current.Next;
             }
         }
-
         public void MoverAnterior()
         {
             if (Current != null && Current.Prev != null)
@@ -50,10 +59,16 @@ namespace ReproductorDeMusica
                 Current = Current.Prev;
             }
         }
-
         public void Inicializar()
         {
-            Current = First;
+            Current = Head;
         }
+        public void Clear()
+        {
+            Head = null;
+            Last = null;
+            Current = null;
+        }
+
     }
 }
